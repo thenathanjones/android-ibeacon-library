@@ -1,0 +1,36 @@
+apply plugin: 'android-library'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.0.0"
+
+    defaultConfig {
+        minSdkVersion 18
+        targetSdkVersion 19
+        versionCode 1
+        versionName "1.0"
+    }
+    release {
+        runProguard false
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+    }
+}
+
+dependencies {
+}
+
+def versionNumber = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'describe', '--tags'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+task createDistribution(dependsOn: 'packageReleaseJar') << {
+    exec {
+        commandLine 'cp', 'classes.jar', "$project.buildDir/ibeacon-${versionNumber()}.jar"
+        workingDir "$project.buildDir/bundles/release"
+    }
+}
