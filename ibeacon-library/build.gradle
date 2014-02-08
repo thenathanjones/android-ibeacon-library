@@ -22,7 +22,7 @@ dependencies {
 def versionNumber = { ->
     def stdout = new ByteArrayOutputStream()
     exec {
-        commandLine 'git', 'describe', '--tags'
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
         standardOutput = stdout
     }
     return stdout.toString().trim()
@@ -30,7 +30,7 @@ def versionNumber = { ->
 
 task createDistribution(dependsOn: 'packageReleaseJar') << {
     exec {
-        commandLine 'cp', 'classes.jar', "$project.buildDir/ibeacon-${versionNumber()}.jar"
+        commandLine 'cp', 'classes.jar', "$project.buildDir/ibeacon-library-${versionNumber()}.jar"
         workingDir "$project.buildDir/bundles/release"
     }
 }

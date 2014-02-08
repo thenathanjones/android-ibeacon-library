@@ -1,1 +1,1 @@
-include ':ibeacon'
+include ':ibeacon-library'
