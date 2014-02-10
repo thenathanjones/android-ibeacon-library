@@ -17,8 +17,8 @@ public class IBeacon {
     public final int txPower;
     public final String hash;
 
-    protected double distanceInMetres;
-    protected long lastReport;
+    private long lastReport;
+    private double distanceInMetres;
 
     private IBeacon(String uuid, int major, int minor, int txPower) {
         this.uuid = uuid;
@@ -78,7 +78,7 @@ public class IBeacon {
         double distanceInMetres = accuracyFrom(rssi, txPower);
 
         if (existingBeacon != null) {
-            distanceInMetres = filteredDistance(distanceInMetres, existingBeacon.distanceInMetres);
+            distanceInMetres = filteredDistance(distanceInMetres, existingBeacon.distanceInMetres());
         }
 
         this.distanceInMetres = distanceInMetres;
@@ -101,5 +101,13 @@ public class IBeacon {
 
     private static double filteredDistance(double newAccuracy, double previousAccuracy) {
         return previousAccuracy * (1 - IBeaconConstants.FILTER_FACTOR) + newAccuracy * IBeaconConstants.FILTER_FACTOR;
+    }
+
+    public long lastReport() {
+        return lastReport;
+    }
+
+    public double distanceInMetres() {
+        return distanceInMetres;
     }
 }

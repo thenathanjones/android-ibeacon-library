@@ -81,7 +81,7 @@ public class IBeaconService implements BluetoothAdapter.LeScanCallback {
         long now = System.currentTimeMillis();
         Collection<IBeacon> toRemove = new HashSet<IBeacon>();
         for (IBeacon beacon : beacons) {
-            if ((now - beacon.lastReport) > IBeaconConstants.CULL_DELAY) {
+            if ((now - beacon.lastReport()) > IBeaconConstants.CULL_DELAY) {
                 toRemove.add(beacon);
             }
         }
@@ -125,7 +125,7 @@ public class IBeaconService implements BluetoothAdapter.LeScanCallback {
             scannedBeacon.calculateDistanceFrom(rssi, existingBeacon);
 
             mKnownBeacons.put(scannedBeacon.hash, scannedBeacon);
-            Log.d(TAG, "Beacon " + scannedBeacon.hash + " located approx. " + scannedBeacon.distanceInMetres + "m");
+            Log.d(TAG, "Beacon " + scannedBeacon.hash + " located approx. " + scannedBeacon.distanceInMetres() + "m");
         }
         else {
             Log.d(TAG, "Record is not an iBeacon");
