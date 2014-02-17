@@ -11,7 +11,7 @@ android {
         versionName "1.0"
     }
     release {
-        runProguard false
+        runProguard true
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
     }
 }
@@ -28,7 +28,7 @@ def versionNumber = { ->
     return stdout.toString().trim()
 }
 
-task createDistribution(dependsOn: 'packageReleaseJar') << {
+task createDistribution(dependsOn: 'proguardRelease') << {
     exec {
         commandLine 'cp', 'classes.jar', "$project.buildDir/ibeacon-library-${versionNumber()}.jar"
         workingDir "$project.buildDir/bundles/release"
