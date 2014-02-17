@@ -18,6 +18,7 @@ public class IBeacon {
     public final String hash;
 
     private long lastReport;
+    private double lastRssi;
     private double distanceInMetres;
 
     private IBeacon(String uuid, int major, int minor, int txPower) {
@@ -74,23 +75,26 @@ public class IBeacon {
         return builder.toString();
     }
 
-    public void calculateDistanceFrom(int rssi, IBeacon existingBeacon) {
-        double distanceInMetres = accuracyFrom(rssi, txPower);
+    public void calculateDistanceFrom(double rssi, IBeacon existingBeacon) {
+        double filteredRssi = KalmanFilter.filter(rssi, hash);
+
+        double distanceInMetres = distanceFrom(filteredRssi, txPower);
 
         if (existingBeacon != null) {
             distanceInMetres = filteredDistance(distanceInMetres, existingBeacon.distanceInMetres());
         }
 
         this.distanceInMetres = distanceInMetres;
+        this.lastRssi = filteredRssi;
         this.lastReport = System.currentTimeMillis();
     }
 
-    private double accuracyFrom(int rssi, int txPower) {
+    private double distanceFrom(double rssi, int txPower) {
         if (rssi == 0) {
             return -1;
         }
 
-        double ratio = ((double)rssi) / txPower;
+        double ratio = rssi / txPower;
         double rssiCorrection = 0.96D + Math.pow(Math.abs(rssi), 3.0D) % 10.0D / 150.0D;
 
         if (ratio < 1) {
@@ -104,6 +108,10 @@ public class IBeacon {
 
     private static double filteredDistance(double newAccuracy, double previousAccuracy) {
         return previousAccuracy * (1 - IBeaconConstants.FILTER_FACTOR) + newAccuracy * IBeaconConstants.FILTER_FACTOR;
+    }
+
+    public double lastRssi() {
+        return lastRssi;
     }
 
     public long lastReport() {
