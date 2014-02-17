@@ -123,6 +123,7 @@ public class IBeaconService implements BluetoothAdapter.LeScanCallback {
 
             IBeacon existingBeacon = mKnownBeacons.get(scannedBeacon.hash);
             scannedBeacon.calculateDistanceFrom(rssi, existingBeacon);
+            Log.d(TAG + ":distanceVars", scannedBeacon.minor + "," + scannedBeacon.txPower + "," + rssi);
 
             mKnownBeacons.put(scannedBeacon.hash, scannedBeacon);
             Log.d(TAG, "Beacon " + scannedBeacon.hash + " located approx. " + scannedBeacon.distanceInMetres() + "m");
