@@ -7,7 +7,7 @@ import java.util.Map;
  * Created by thenathanjones on 16/02/2014.
  */
 public class KalmanFilter {
-    private static final double KALMAN_VALUE = 4D;
+    public static double KALMAN_VALUE = 2D;
     private static final Map<String, Double> mPredictedSignals = new HashMap<String, Double>();
     private static final Map<String, Double> mPredictedVelocities = new HashMap<String, Double>();
 
