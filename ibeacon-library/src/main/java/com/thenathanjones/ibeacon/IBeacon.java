@@ -95,14 +95,12 @@ public class IBeacon {
         }
 
         double ratio = rssi / txPower;
-        double rssiCorrection = 0.96D + Math.pow(Math.abs(rssi), 3.0D) % 10.0D / 150.0D;
 
         if (ratio < 1) {
-            return Math.pow(ratio, 9.98) * rssiCorrection;
+            return Math.pow(ratio, 10);
         }
         else {
-            return (0.103D + 0.89978D * Math.pow(ratio, 7.71D)) * rssiCorrection;
-//            return 0.89976 * Math.pow(ratio, 7.7095) + 0.111;
+            return 0.89976 * Math.pow(ratio, 7.7095) + 0.111;
         }
     }
 
